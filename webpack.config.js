@@ -17,7 +17,7 @@ module.exports = {
     new ESLintPlugin(),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      //title: 'Template',
+      title: 'bike-info',
       template: './src/index.html',
       inject: 'body'
     })
