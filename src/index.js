@@ -13,16 +13,24 @@ async function getBikes(location, enteredDate) {
     }
 
 
-    console.log(response);
-    console.log(response.bikes);
-    console.log(location);
+    // console.log(response);
+    // console.log(response.bikes);
+    // console.log(location);
 }
-function searchDate(response, enteredDate) {
-    let date = enteredDate;
-    forEach(function (response.bikes) {
 
+//This function will loop through all bikes in response and return array of bikes that fall within 7 days of date entered by user
+function searchDate(response, enteredDate) {
+    let newBikeArray = [];
+    response.bikes.forEach(function (bike) {
+        console.log(bike);
+        if (Math.abs(bike.date_stolen - enteredDate) <= 7) {
+            newBikeArray.push(bike);
+            console.log(newBikeArray);
+            return newBikeArray;
+        }
     })
 }
+
 function printElements(response, location) {
     document.querySelector("#showResponse").innerText = `The bikes that have been stolen near ${location} are: `;
     let p = document.querySelector("#showResponse");
@@ -38,10 +46,10 @@ function printError(error, location) {
 
 function handleFormSubmission(event) {
     event.preventDefault();
-    // const date = document.querySelector("#date").value;
+    const enteredDate = document.querySelector("#date").value;
     const location = document.querySelector("#zip").value;
-    document.querySelector("#date").value = null;
-    getBikes(location);
+
+    getBikes(location, enteredDate);
 }
 
 window.addEventListener("load", function () {
