@@ -4,10 +4,14 @@ import './styles.css';
 import bikeInfo from './bike.js';
 
 async function getBikes(location, enteredDate) {
+    let date = new Date(enteredDate);
+    const dateInSec = date.getTime() / 1000;
     const response = await bikeInfo.getBikes(location, enteredDate);
     if (response.bikes) {
-        printElements(response, location);
-        searchDate(response, enteredDate);
+        let newBikeArray = searchDate(response, dateInSec);
+        printElements(response, location, newBikeArray);
+
+
     } else {
         printError(this, response);
     }
@@ -19,25 +23,27 @@ async function getBikes(location, enteredDate) {
 }
 
 //This function will loop through all bikes in response and return array of bikes that fall within 7 days of date entered by user
-function searchDate(response, enteredDate) {
+function searchDate(response, dateInSec) {
     let newBikeArray = [];
     response.bikes.forEach(function (bike) {
-        console.log(bike);
-        if (Math.abs(bike.date_stolen - enteredDate) <= 7) {
+        if (Math.abs(bike.date_stolen - dateInSec) <= 604800) {
+            let returnedDate = new Date(bike.date_stolen);
+            let newDateFormat = returnedDate.getHours() + ":" + returnedDate.getMinutes() + "," + returnedDate.toString();
+            bike.date_stolen = newDateFormat;
             newBikeArray.push(bike);
-            console.log(newBikeArray);
             return newBikeArray;
         }
     })
 }
 
 function printElements(response, location) {
+
     document.querySelector("#showResponse").innerText = `The bikes that have been stolen near ${location} are: `;
+
     let p = document.querySelector("#showResponse");
     for (let i = 0; i <= 10; i++) {
-        p.append(response.bikes[i].stolen_location);
+        p.append(response.bikes[i].stolen_location + " ");
     }
-
 }
 
 function printError(error, location) {
